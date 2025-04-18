@@ -1,5 +1,5 @@
 import React from "react"
-import HelpdeskComingSoon from "../components/helpdesk/HelpdeskComingSoon"
+import HelpdeskComingSoon from "../components/helpdesk/helpdeskComingSoon"
 import Footer from "../components/footer"
 
 export default function Helpdesk() {

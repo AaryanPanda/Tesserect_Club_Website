@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Background & Foreground */
+    --background: 0 0% 0%; /* Pure black */
+    --foreground: 210 40% 98%; /* Clean white text */
+
+    /* Custom Deep Red-Blue Theme */
+    --brand-red: 0 100% 27%;      /* #8B0000 - Deep Red */
+    --brand-blue: 240 100% 27%;   /* #00008B - Deep Blue */
+
+    /* Primary: Deep Red */
+    --primary: 0 100% 30%;
+    --primary-foreground: 210 40% 98%;
+
+    /* Secondary: Deep Blue */
+    --secondary: 240 100% 27%;
+    --secondary-foreground: 210 40% 98%;
+
+    /* Accent: Indigo midpoint */
+    --accent: 275 100% 25%; /* #4B0082 - Indigo-like */
+    --accent-foreground: 210 40% 98%;
+
+    /* Muted */
+    --muted: 240 20% 12%;
+    --muted-foreground: 215 20% 65%;
+
+    /* Card & UI Elements */
+    --card: 240 30% 10%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 240 30% 10%;
+    --popover-foreground: 210 40% 98%;
+
+    --border: 240 25% 18%;
+    --input: 240 25% 18%;
+    --ring: 275 100% 25%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    background: linear-gradient(135deg, #1a0000 0%, #000919 100%);
+    background-attachment: fixed;
+  }
+}
+
+@layer utilities {
+  /* Custom Brand Gradient: Deep Red ↔ Indigo ↔ Deep Blue */
+  .brand-gradient {
+    background: linear-gradient(
+      135deg,
+      #8B0000 0%,
+      #4B0082 50%,
+      #00008B 100%
+    );
+  }
+
+  .brand-gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(
+      135deg,
+      #8B0000 0%,
+      #4B0082 50%,
+      #00008B 100%
+    );
+  }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient 8s ease infinite;
+  }
+
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+}
+
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #8B0000, #00008B);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #B22222, #1E90FF);
+}
+
+/* Selection styling */
+::selection {
+  background: rgba(139, 0, 0, 0.3); /* Deep red transparent */
+  color: #ffffff;
+}

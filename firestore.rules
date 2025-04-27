@@ -1,11 +1,19 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow users to read/write their own documents
+    function isValidToken() {
+      return request.auth.token.auth_time < request.time.toMillis() - 30 * 60 * 1000
+        && request.auth.token.exp > request.time.toMillis();
+    }
+
+    function isAuthenticated() {
+      return request.auth != null && isValidToken();
+    }
+
     match /users/{userId} {
-      allow create: if request.auth != null && request.auth.uid == userId;
-      allow read, update: if request.auth != null && request.auth.uid == userId;
-      allow delete: if false; // Prevent deletion
+      allow read: if isAuthenticated() && 
+        (request.auth.uid == userId || request.auth.token.role == 'admin');
+      allow write: if isAuthenticated() && request.auth.uid == userId;
     }
 
     // Default deny

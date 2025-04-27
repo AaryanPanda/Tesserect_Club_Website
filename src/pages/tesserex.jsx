@@ -1,8 +1,14 @@
 import React from "react"
 import EventGrid from "../components/tesserect/eventGrid"
 import Footer from "../components/footer"
+import { Analytics } from '../firebase';
 
 export default function Tesserex() {
+  const handleEventRegistration = (eventName) => {
+    Analytics.events.eventRegistration(eventName);
+    // ... rest of your registration logic
+  };
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#1a0000] via-[#000919] to-[#1a0000] text-white pt-20">
       <section className="py-16 md:py-24">
@@ -16,7 +22,7 @@ export default function Tesserex() {
             </p>
           </div>
 
-          <EventGrid />
+          <EventGrid onEventRegister={handleEventRegistration} />
         </div>
       </section>
       <Footer />

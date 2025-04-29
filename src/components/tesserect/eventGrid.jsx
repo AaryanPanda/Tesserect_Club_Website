@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import EventCard from "./EventCard";
+import EventCard from "./eventCard";
 import { GamepadIcon, Film, Music, Tv, Users } from "lucide-react";
 
 const events = [

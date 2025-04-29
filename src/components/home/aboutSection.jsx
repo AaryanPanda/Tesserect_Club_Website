@@ -1,104 +1,222 @@
-import { motion } from "framer-motion"
-import { GamepadIcon, Film, Laugh, Music, Tv, Users } from "lucide-react"
+"use client"
+
+import { motion, useScroll, useTransform } from "framer-motion"
+import { useRef } from "react"
 
 export default function AboutSection() {
-  const features = [
+  const sectionRef = useRef(null)
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  })
+
+  // Parallax effects
+  const y = useTransform(scrollYProgress, [0, 1], [100, -100])
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0])
+  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.8])
+
+  // Rotation for the spaces
+  const rotateX = useTransform(scrollYProgress, [0, 1], [20, 0])
+  const rotateY = useTransform(scrollYProgress, [0, 1], [-20, 0])
+
+  const spaces = [
     {
-      icon: <GamepadIcon className="h-10 w-10 text-[#ff6b6b]" />,
-      title: "Gaming",
-      description: "From casual mobile games to competitive eSports tournaments",
+      name: "Cine Space",
+      icon: "🎬",
+      description: "Immerse yourself in cinematic adventures with movie nights and film discussions.",
+      color: "#ff6b6b",
+      shadowColor: "rgba(255, 107, 107, 0.4)",
     },
     {
-      icon: <Film className="h-10 w-10 text-[#4d9fff]" />,
-      title: "Movies",
-      description: "Movie nights, discussions, and fan theories about the latest releases",
+      name: "Soul Space",
+      icon: "🧘",
+      description: "Find your center with mindfulness activities and creative expression.",
+      color: "#4d9fff",
+      shadowColor: "rgba(77, 159, 255, 0.4)",
     },
     {
-      icon: <Laugh className="h-10 w-10 text-[#ff6b6b]" />,
-      title: "Memes",
-      description: "The freshest, dankest memes shared among friends",
+      name: "Play Space",
+      icon: "🎮",
+      description: "Level up your gaming skills with tournaments and casual play sessions.",
+      color: "#ff9d6b",
+      shadowColor: "rgba(255, 157, 107, 0.4)",
     },
     {
-      icon: <Music className="h-10 w-10 text-[#4d9fff]" />,
-      title: "Music",
-      description: "Playlists, recommendations, and live performances",
-    },
-    {
-      icon: <Tv className="h-10 w-10 text-[#ff6b6b]" />,
-      title: "TV Shows",
-      description: "Binge-watching parties and episode discussions",
-    },
-    {
-      icon: <Users className="h-10 w-10 text-[#4d9fff]" />,
-      title: "Community",
-      description: "A welcoming space for all entertainment enthusiasts",
+      name: "Jolly Space",
+      icon: "🎉",
+      description: "Connect and celebrate with social events and unforgettable parties.",
+      color: "#9d4dff",
+      shadowColor: "rgba(157, 77, 255, 0.4)",
     },
   ]
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  }
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.5 },
-    },
-  }
-
   return (
-    <section id="about" className="py-20 relative">
-      <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-[#ff6b6b] to-[#4d9fff] font-poppins">
-            What is TESSERACT?
-          </h2>
-          <p className="text-xl max-w-3xl mx-auto text-gray-300">
-            TESSERACT is more than just a club - it's a multidimensional space where entertainment enthusiasts come
-            together to celebrate everything from gaming and movies to memes and music!
-          </p>
-        </motion.div>
-
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-        >
-          {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              className="bg-gradient-to-br from-[#1a0000]/40 to-[#000919]/40 backdrop-blur-lg rounded-xl p-6 hover:from-[#1a0000]/60 hover:to-[#000919]/60 transition-all duration-300 hover:shadow-xl hover:shadow-[#ff6b6b]/10 border border-white/5"
-              whileHover={{
-                y: -10,
-                transition: { duration: 0.2 },
-              }}
-            >
-              <div className="mb-4">{feature.icon}</div>
-              <h3 className="text-2xl font-bold mb-2 text-white font-poppins">{feature.title}</h3>
-              <p className="text-gray-300">{feature.description}</p>
-            </motion.div>
-          ))}
-        </motion.div>
+    <motion.section ref={sectionRef} className="py-20 relative overflow-hidden" style={{ opacity, scale }}>
+      {/* Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        {[...Array(5)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full bg-gradient-to-r from-[#ff6b6b]/5 to-[#4d9fff]/5 backdrop-blur-md"
+            style={{
+              width: Math.random() * 400 + 200,
+              height: Math.random() * 400 + 200,
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              border: `1px solid rgba(${Math.random() * 255}, ${Math.random() * 255}, 255, 0.1)`,
+            }}
+            animate={{
+              x: [0, Math.random() * 100 - 50, 0],
+              y: [0, Math.random() * 100 - 50, 0],
+              rotate: [0, Math.random() * 360, 0],
+            }}
+            transition={{
+              duration: Math.random() * 20 + 20,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
       </div>
 
-      <div className="absolute -bottom-10 left-0 right-0 h-20 bg-gradient-to-b from-transparent to-[#000919]/50 z-10" />
-    </section>
+      <div className="container mx-auto px-4">
+        <motion.div className="text-center mb-16" style={{ y }}>
+          <motion.h2
+            className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-[#ff6b6b] to-[#4d9fff]"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            Discover Tesseract Club
+          </motion.h2>
+          <motion.p
+            className="text-xl text-gray-300 max-w-3xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            Your go-to space for fun, friendship, and unforgettable memories! Designed exclusively for IITM BS students,
+            it offers vibrant zones where you can chill, connect, and celebrate college life.
+          </motion.p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {spaces.map((space, index) => (
+            <motion.div
+              key={index}
+              className="relative rounded-xl overflow-hidden group"
+              style={{
+                perspective: 1000,
+                rotateX,
+                rotateY,
+              }}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <div
+                className="absolute inset-0 opacity-20 group-hover:opacity-40 transition-opacity duration-500"
+                style={{
+                  background: `radial-gradient(circle at center, ${space.color}, transparent 70%)`,
+                }}
+              />
+
+              {/* Border Glow Effect */}
+              <motion.div
+                className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{
+                  boxShadow: `0 0 20px 2px ${space.shadowColor}`,
+                  zIndex: 1
+                }}
+                animate={{
+                  boxShadow: [
+                    `0 0 10px 1px ${space.shadowColor}`,
+                    `0 0 20px 3px ${space.shadowColor}`,
+                    `0 0 10px 1px ${space.shadowColor}`
+                  ]
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut"
+                }}
+              />
+
+              {/* Animated Border Effect */}
+              <div className="absolute inset-0 rounded-xl p-[2px] z-10">
+  <div 
+    className="absolute inset-0 rounded-xl"
+    style={{
+      background: `linear-gradient(90deg, transparent, ${space.color}80, transparent)`,
+      backgroundSize: '200% 200%',
+      animation: `borderGradient${index} 6s ease-in-out infinite`
+    }}
+  />
+  <style jsx>{`
+    @keyframes borderGradient${index} {
+      0% { background-position: 0% 50% }
+      50% { background-position: 100% 50% }
+      100% { background-position: 0% 50% }
+    }
+  `}</style>
+</div>
+
+              <div className="relative z-20 p-6 border border-white/10 rounded-xl backdrop-blur-sm h-full flex flex-col items-center text-center min-h-[280px] group-hover:border-white/30 transition-all duration-300 bg-black/20">
+                <motion.div
+                  className="text-5xl mb-4"
+                  animate={{
+                    y: [0, -10, 0],
+                    rotate: [0, 5, 0, -5, 0],
+                  }}
+                  transition={{
+                    duration: 5,
+                    repeat: Number.POSITIVE_INFINITY,
+                    ease: "easeInOut",
+                    delay: index * 0.5,
+                  }}
+                >
+                  {space.icon}
+                </motion.div>
+
+                <h3 className="text-2xl font-bold mb-3" style={{ color: space.color }}>
+                  {space.name}
+                </h3>
+
+                <p className="text-gray-300 flex-grow">{space.description}</p>
+
+                <motion.div
+                  className="mt-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <a 
+                    href="#" 
+                    className="inline-flex items-center text-sm font-medium px-4 py-2 rounded-full" 
+                    style={{ 
+                      color: 'white',
+                      background: `linear-gradient(to right, ${space.color}, ${space.color}aa)`,
+                      boxShadow: `0 4px 10px -2px ${space.shadowColor}`
+                    }}
+                  >
+                    Explore {space.name}
+                    <svg
+                      className="ml-1 w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </a>
+                </motion.div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </motion.section>
   )
 }

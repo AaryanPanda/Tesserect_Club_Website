@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User, LogOut } from "lucide-react";
 import logo from "../assets/Tesseract_Logo-removebg.png";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { auth } from "../firebase";
+import { signOut } from "firebase/auth";
 
 const navLinks = [
   { name: "Home", path: "/" },
-  { name: "TESSEREX", path: "/tesserex" },
+  { name: "Arena-X", path: "/tesserex" },
   { name: "Past Events", path: "/past-events" },
   { name: "Team", path: "/team" },
   { name: "Helpdesk", path: "/helpdesk" },
@@ -16,6 +19,44 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate("/");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
+
+  const UserProfile = () => (
+    <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
+        <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#ff6b6b] to-[#4d9fff] flex items-center justify-center">
+          <User className="w-5 h-5 text-white" />
+        </div>
+        <span className="text-white text-sm">{user?.email?.split("@")[0]}</span>
+      </div>
+      <button
+        onClick={handleLogout}
+        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-colors"
+      >
+        <LogOut className="w-4 h-4" />
+        <span className="text-sm">Logout</span>
+      </button>
+    </div>
+  );
+
+  const LoginButton = () => (
+    <Link
+      to="/login"
+      className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#ff6b6b] to-[#4d9fff] text-white font-medium text-sm hover:opacity-90 transition-opacity"
+    >
+      Login
+    </Link>
+  );
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,24 +72,21 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-[#1a0000]/80 backdrop-blur-md py-2 shadow-lg shadow-purple-500/10"
-          : "bg-transparent py-4"
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-[#1a0000]/80 backdrop-blur-md py-2 shadow-lg shadow-white/10
+  after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-gradient-to-r after:from-transparent after:via-white after:to-transparent
+`}
     >
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 py-[5px]">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 group">
             <motion.div
-              whileHover={{ rotate: 360 }}
               transition={{ duration: 0.5 }}
               className="text-[#ff6b6b]"
             >
               <img
                 src={logo}
                 alt="Tesseract Logo"
-                className="h-12 w-12 object-contain"
+                className="h-10 w-10 object-contain"
               />
             </motion.div>
             <span className="text-2xl font-bold text-[#e4e4e7]">TESSERACT</span>
@@ -56,11 +94,15 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            {navLinks.map((link) => (
+            {navLinks.map((link, index) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`relative font-medium text-sm transition-colors ${
+                className={`relative ${
+                  index === 1
+                    ? "font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#ff6b6b] to-[#4d9fff] text-lg "
+                    : "font-semibold"
+                } text-md transition-colors ${
                   location.pathname === link.path
                     ? "text-white"
                     : "text-[#d4d4d8] hover:text-white"
@@ -76,6 +118,7 @@ export default function Navbar() {
                 )}
               </Link>
             ))}
+            {user ? <UserProfile /> : <LoginButton />}
           </nav>
 
           {/* Mobile Menu Button */}
@@ -120,6 +163,13 @@ export default function Navbar() {
                     </Link>
                   </motion.div>
                 ))}
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: navLinks.length * 0.1 }}
+                >
+                  {user ? <UserProfile /> : <LoginButton />}
+                </motion.div>
               </nav>
             </div>
           </motion.div>

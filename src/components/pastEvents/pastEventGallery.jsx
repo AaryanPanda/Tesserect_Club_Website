@@ -1,257 +1,152 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { History, Calendar, Star, Sparkles } from "lucide-react";
 
-// Sample past events data
-const pastEvents = [
-  {
-    id: 1,
-    title: "Gaming Tournament 2024",
-    description: "Our annual gaming tournament with over 200 participants!",
-    image: "/placeholder.svg",
-  },
-  {
-    id: 2,
-    title: "Movie Marathon Night",
-    description: "12-hour movie marathon featuring the best sci-fi films!",
-    image: "/placeholder.svg",
-  },
-  {
-    id: 3,
-    title: "Cosplay Competition",
-    description: "Amazing costumes and performances by talented cosplayers!",
-    image: "/placeholder.svg",
-  },
-  {
-    id: 4,
-    title: "Meme Contest 2024",
-    description: "The funniest meme competition with viral entries!",
-    image: "/placeholder.svg",
-  },
-  {
-    id: 5,
-    title: "Music Festival",
-    description: "Live performances by local bands and artists!",
-    image: "/placeholder.svg",
-  },
-  {
-    id: 6,
-    title: "Tech Expo",
-    description: "Showcasing the latest in gaming and entertainment technology!",
-    image: "/placeholder.svg",
-  },
-  {
-    id: 7,
-    title: "Anime Convention",
-    description: "Celebrating Japanese animation and culture!",
-    image: "/placeholder.svg",
-  },
-  {
-    id: 8,
-    title: "Board Game Night",
-    description: "Strategic fun with classic and modern board games!",
-    image: "/placeholder.svg",
-  },
-  {
-    id: 9,
-    title: "VR Experience Day",
-    description: "Immersive virtual reality experiences for all attendees!",
-    image: "/placeholder.svg",
-  },
-];
+export default function PastEventsComingSoon() {
+  const [progress, setProgress] = useState(0);
+  const [message, setMessage] = useState("Gathering memories from the past...");
 
-export default function PastEventsGallery() {
-  const [selectedEvent, setSelectedEvent] = useState(null);
-  const [view, setView] = useState("grid");
+  const messages = [
+    "Gathering memories from the past...",
+    "Dusting off photo albums...",
+    "Interviewing previous attendees...",
+    "Recovering footage from time capsules...",
+    "Converting VHS tapes to digital...",
+    "Decoding ancient event flyers...",
+    "Restoring faded photographs...",
+    "Finding long-lost guest books...",
+  ];
 
-  const handleEventClick = (id) => setSelectedEvent(id);
-  const handleClose = () => setSelectedEvent(null);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 95) {
+          clearInterval(interval);
+          return 95;
+        }
+        return prev + Math.random() * 15;
+      });
 
-  const handlePrev = () => {
-    if (selectedEvent === null) return;
-    const index = pastEvents.findIndex((e) => e.id === selectedEvent);
-    const prevIndex = (index - 1 + pastEvents.length) % pastEvents.length;
-    setSelectedEvent(pastEvents[prevIndex].id);
-  };
+      setMessage(messages[Math.floor(Math.random() * messages.length)]);
+    }, 2000);
 
-  const handleNext = () => {
-    if (selectedEvent === null) return;
-    const index = pastEvents.findIndex((e) => e.id === selectedEvent);
-    const nextIndex = (index + 1) % pastEvents.length;
-    setSelectedEvent(pastEvents[nextIndex].id);
-  };
+    return () => clearInterval(interval);
+  }, []);
 
-  const selectedEventData = pastEvents.find((e) => e.id === selectedEvent);
+  const stars = Array.from({ length: 50 }, (_, i) => ({
+    id: i,
+    size: Math.random() * 3 + 1,
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    duration: Math.random() * 5 + 3,
+    delay: Math.random() * 5,
+  }));
 
   return (
-    <div className="space-y-8">
-      {/* View Toggle */}
-      <div className="flex justify-center mb-8">
-        <div className="bg-white/10 rounded-full p-1 flex">
-          <button
-            onClick={() => setView("grid")}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-              view === "grid"
-                ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white"
-                : "text-white hover:bg-white/10"
-            }`}
-          >
-            Grid View
-          </button>
-          <button
-            onClick={() => setView("carousel")}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-              view === "carousel"
-                ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white"
-                : "text-white hover:bg-white/10"
-            }`}
-          >
-            Carousel View
-          </button>
-        </div>
-      </div>
-
-      {/* Grid View */}
-      {view === "grid" && (
-        <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" layout>
-          {pastEvents.map((event) => (
+    <div className="flex flex-col items-center justify-center min-h-[60vh]">
+      <div className="relative w-full max-w-2xl h-96 bg-gradient-to-br from-pink-900/30 to-indigo-900/30 rounded-2xl overflow-hidden border border-white/10 p-8">
+        {/* Stars background */}
+        <div className="absolute inset-0 overflow-hidden">
+          {stars.map((star) => (
             <motion.div
-              key={event.id}
-              layoutId={`event-${event.id}`}
-              onClick={() => handleEventClick(event.id)}
-              className="bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden cursor-pointer group"
-              whileHover={{ y: -10, transition: { duration: 0.3 } }}
-            >
-              <div className="relative h-48 overflow-hidden">
-                <img
-                  src={event.image}
-                  alt={event.title}
-                  className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4">
-                  <h3 className="text-xl font-bold text-white font-poppins">{event.title}</h3>
-                </div>
-              </div>
-              <div className="p-4">
-                <p className="text-gray-300">{event.description}</p>
-              </div>
-            </motion.div>
+              key={star.id}
+              className="absolute rounded-full bg-white"
+              style={{
+                width: star.size,
+                height: star.size,
+                left: `${star.x}%`,
+                top: `${star.y}%`,
+              }}
+              animate={{
+                opacity: [0.2, 1, 0.2],
+                scale: [1, 1.5, 1],
+              }}
+              transition={{
+                duration: star.duration,
+                repeat: Number.POSITIVE_INFINITY,
+                delay: star.delay,
+              }}
+            />
           ))}
-        </motion.div>
-      )}
+        </div>
 
-      {/* Carousel View */}
-      {view === "carousel" && (
-        <div className="relative overflow-hidden rounded-xl">
-          <div className="flex items-center">
-            <button
-              onClick={handlePrev}
-              className="absolute left-4 z-10 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full"
-            >
-              <ChevronLeft className="h-6 w-6" />
-            </button>
+        <div className="relative z-10 flex flex-col items-center justify-center h-full">
+          <motion.div
+            animate={{
+              y: [0, -15, 0],
+              rotate: [0, 5, -5, 0],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+            className="mb-8"
+          >
+            <div className="relative">
+              <History className="h-24 w-24 text-pink-400" />
+              <motion.div
+                animate={{
+                  opacity: [0, 1, 0],
+                  y: [0, 10, 20],
+                  scale: [1, 0.8, 0.6],
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeOut",
+                }}
+                className="absolute -bottom-4 left-1/2 transform -translate-x-1/2"
+              >
+                <Sparkles className="h-8 w-8 text-indigo-400" />
+              </motion.div>
+            </div>
+          </motion.div>
 
-            <div className="overflow-x-auto scrollbar-hide">
-              <div className="flex gap-4 p-4">
-                {pastEvents.map((event, index) => (
-                  <motion.div
-                    key={event.id}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: index * 0.1 }}
-                    onClick={() => handleEventClick(event.id)}
-                    className="flex-shrink-0 w-80 bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden cursor-pointer group"
-                    whileHover={{ y: -10, transition: { duration: 0.3 } }}
-                  >
-                    <div className="relative h-48 overflow-hidden">
-                      <img
-                        src={event.image}
-                        alt={event.title}
-                        className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                      <div className="absolute bottom-4 left-4 right-4">
-                        <h3 className="text-xl font-bold text-white font-poppins">{event.title}</h3>
-                      </div>
-                    </div>
-                    <div className="p-4">
-                      <p className="text-gray-300">{event.description}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="text-center"
+          >
+            <h2 className="text-3xl font-bold mb-4 text-white font-poppins">Coming Soon!</h2>
+            <p className="text-xl text-pink-200 mb-6">Our past events gallery is under construction</p>
+
+            <div className="flex items-center gap-2 mb-2">
+              <Calendar className="h-5 w-5 text-lime-400" />
+              <p className="text-pink-200">{message}</p>
             </div>
 
-            <button
-              onClick={handleNext}
-              className="absolute right-4 z-10 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full"
-            >
-              <ChevronRight className="h-6 w-6" />
-            </button>
-          </div>
-        </div>
-      )}
+            <div className="w-full bg-white/10 rounded-full h-4 mb-6">
+              <motion.div
+                className="h-full bg-gradient-to-r from-pink-500 to-indigo-500 rounded-full"
+                style={{ width: `${progress}%` }}
+                initial={{ width: "0%" }}
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 0.5 }}
+              />
+            </div>
 
-      {/* Modal */}
-      <AnimatePresence>
-        {selectedEvent && selectedEventData && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
-            onClick={handleClose}
-          >
-            <motion.div
-              layoutId={`event-${selectedEvent}`}
-              className="bg-gradient-to-br from-purple-900/90 to-blue-900/90 backdrop-blur-lg rounded-xl overflow-hidden max-w-3xl w-full relative"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                onClick={handleClose}
-                className="absolute top-4 right-4 z-10 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full"
-              >
-                <X className="h-6 w-6" />
-              </button>
-
-              <div className="relative h-64 md:h-80 overflow-hidden">
-                <img
-                  src={selectedEventData.image}
-                  alt={selectedEventData.title}
-                  className="object-cover w-full h-full"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4">
-                  <h3 className="text-2xl md:text-3xl font-bold text-white font-poppins">
-                    {selectedEventData.title}
-                  </h3>
-                </div>
-              </div>
-
-              <div className="p-6">
-                <p className="text-gray-300 text-lg">{selectedEventData.description}</p>
-                <div className="mt-6 flex justify-between">
-                  <button
-                    onClick={handlePrev}
-                    className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg flex items-center"
-                  >
-                    <ChevronLeft className="h-4 w-4 mr-2" />
-                    Previous
-                  </button>
-                  <button
-                    onClick={handleNext}
-                    className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg flex items-center"
-                  >
-                    Next
-                    <ChevronRight className="h-4 w-4 ml-2" />
-                  </button>
-                </div>
-              </div>
-            </motion.div>
+            <div className="flex justify-center gap-2">
+              {[...Array(3)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  animate={{
+                    scale: [1, 1.2, 1],
+                  }}
+                  transition={{
+                    duration: 1,
+                    repeat: Number.POSITIVE_INFINITY,
+                    delay: i * 0.3,
+                  }}
+                >
+                  <Star className="h-6 w-6 text-yellow-400" />
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
-        )}
-      </AnimatePresence>
+        </div>
+      </div>
     </div>
   );
 }

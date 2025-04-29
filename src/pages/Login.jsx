@@ -15,6 +15,12 @@ export default function Login() {
     
     try {
       const provider = new GoogleAuthProvider();
+      // Add these security configurations
+      provider.setCustomParameters({
+        prompt: 'select_account',
+        hd: 'ds.study.iitm.ac.in' // Restrict to specific domain
+      });
+      
       const result = await signInWithPopup(auth, provider);
       
       // Log the login attempt

@@ -4,13 +4,14 @@ import { getFirestore, doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { getAnalytics, logEvent } from 'firebase/analytics';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyC1YMGcf6zyZ6Iu91o6fnmPuM9wXNOi2GY",
-    authDomain: "tessaractlogin.firebaseapp.com",
-    projectId: "tessaractlogin",
-    storageBucket: "tessaractlogin.firebasestorage.app",
-    messagingSenderId: "661274180357",
-    appId: "1:661274180357:web:318d2f6d777bcb8546d56c",
-    measurementId: "G-F7HJRMV9KP"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase

@@ -2,17 +2,22 @@ import axios from 'axios';
 import { auth } from '../firebase';
 
 const api = axios.create({
-  baseURL: 'your-api-base-url',
+  baseURL: import.meta.env.VITE_API_BASE_URL, // Should use environment variable
   timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+    'X-Client-Version': import.meta.env.VITE_APP_VERSION // Add app version tracking
+  }
 });
 
-// Add token to requests
+// Add CSRF protection if your backend supports it
 api.interceptors.request.use(async (config) => {
   try {
     const user = auth.currentUser;
     if (user) {
       const token = await user.getIdToken();
       config.headers.Authorization = `Bearer ${token}`;
+      config.headers['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]')?.content;
     }
     return config;
   } catch (error) {

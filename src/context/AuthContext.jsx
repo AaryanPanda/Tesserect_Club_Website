@@ -45,6 +45,7 @@ export function AuthProvider({ children }) {
     if (!user) return;
 
     let inactivityTimeout;
+    let tokenRefreshInterval;
 
     const resetInactivityTimer = () => {
       clearTimeout(inactivityTimeout);
@@ -52,22 +53,32 @@ export function AuthProvider({ children }) {
         console.log('Session timeout due to inactivity');
         try {
           await auth.signOut();
+          window.location.href = '/login?reason=session_timeout';
         } catch (error) {
           console.error('Error signing out:', error);
         }
       }, 2 * 60 * 60 * 1000); // 2 hours
     };
 
-    // Reset timer on user activity
+    // Refresh token every 50 minutes
+    tokenRefreshInterval = setInterval(async () => {
+      try {
+        await user.getIdToken(true);
+      } catch (error) {
+        console.error('Token refresh failed:', error);
+      }
+    }, 50 * 60 * 1000);
+
     const events = ['mousedown', 'keydown', 'scroll', 'touchstart'];
     events.forEach(event => {
-      window.addEventListener(event, resetInactivityTimer);
+      window.addEventListener(event, resetInactivityTimer, { passive: true });
     });
 
     resetInactivityTimer();
 
     return () => {
       clearTimeout(inactivityTimeout);
+      clearInterval(tokenRefreshInterval);
       events.forEach(event => {
         window.removeEventListener(event, resetInactivityTimer);
       });

@@ -1,0 +1,133 @@
+import { GamepadIcon, Film, Music, Tv, Users } from "lucide-react";
+import bgmi from "../components/tesserect/BGMI.png";
+import ff from '../components/tesserect/Free-Fire.png';
+import carnival from '../components/tesserect/Carnival.png';
+import clashroyale from '../components/tesserect/Clash-Royale.png';
+import cod from '../components/tesserect/COD.png';
+
+export const events = [
+  {
+    id: 1,
+    title: "BGMI",
+    description: "From Pochinki to Paradise, we slay every single zone.",
+    image: bgmi,
+    icon: <GamepadIcon className="h-6 w-6" />,
+    category: "Gaming",
+    date: "May 10, 2025",
+    prizeAmount: "₹3,000",
+    guidelines: "https://docs.google.com/document/d/1XOVFR4BdEAJnOilsPw7Lw9bkxzY3q8MqFdkIRg59Wk8/edit?tab=t.0",
+    formUrl: "https://forms.gle/Mp8i7sdXMh4GBi1YA",
+    rules: [
+      "Any form of cheating, exploitation of bugs, or unfair advantage is strictly prohibited.",
+      "Offensive behavior or language will lead to disqualification.",
+      "No use of third-party apps or cheats.",
+      "Rounds may be paused/rescheduled during server issues at the organizer's discretion.",
+      "Disconnected players may rejoin, except during the finals.",
+    ],
+    timeSlots: [
+      "May 10, Qualifiers: 7:00-9:00 PM",
+      "May 12, Semi-Finals: 7:30-9:00 PM",
+      "May 14, Finals: 8:00-9:00 PM",
+    ],
+    venue: "G-Meet",
+  },
+  {
+    id: 2,
+    title: "Free Fire",
+    description:
+      "Clutching in style, dropping bodies with every booyah earned.",
+    image: ff,
+    icon: <GamepadIcon className="h-6 w-6" />,
+    category: "Movies",
+    date: "May 11, 2025",
+    prizeAmount: "₹2,500",
+    guidelines: "https://docs.google.com/document/d/1XOVFR4BdEAJnOilsPw7Lw9bkxzY3q8MqFdkIRg59Wk8/edit?tab=t.0",
+    formUrl: "https://forms.gle/PzoaDftfDvEogCnb8",
+    rules: [
+      "Any form of cheating, exploitation of bugs, or unfair advantage is strictly prohibited.",
+      "Offensive behavior or language will lead to disqualification.",
+      "No use of third-party apps or cheats.",
+      "Rounds may be paused/rescheduled during server issues at the organizer's discretion.",
+      "Disconnected players may rejoin, except during the finals.",
+    ],
+    timeSlots: [
+      "May 11, Qualifiers: 6:00-7:30 PM",
+      "May 13, Semi-Finals: 6:00-7:30 PM",
+      "May 14, Finals: 7:00-8:00 PM",
+    ],
+    venue: "G-Meet",
+  },
+  {
+    id: 3,
+    title: "Carnival",
+    description: "Every card counts when victory’s just one tower away.",
+    image: carnival,
+    icon: <GamepadIcon className="h-6 w-6" />,
+    category: "Music",
+    date: "May 15, 2025",
+    prizeAmount: "₹1,000",
+    guidelines: "https://docs.google.com/document/d/1XOVFR4BdEAJnOilsPw7Lw9bkxzY3q8MqFdkIRg59Wk8/edit?tab=t.0",
+    formUrl: "https://forms.gle/dM44QCnQHVRyYjsR8",
+    rules: [
+      "Any form of cheating, exploitation of bugs, or unfair advantage is strictly prohibited.",
+      "Offensive behavior or language will lead to disqualification.",
+      "No use of third-party apps or cheats.",
+      "Rounds may be paused/rescheduled during server issues at the organizer's discretion.",
+      "Disconnected players may rejoin, except during the finals.",
+    ],
+    timeSlots: [
+      "May 15: 6:00-9:00 PM",
+    ],
+    venue: "G-Meet",
+  },
+  {
+    id: 4,
+    title: "Clash Royale",
+    description: "Guns loaded, squad locked, missions clear — no mercy given.",
+    image: clashroyale,
+    icon: <GamepadIcon className="h-6 w-6" />,
+    category: "TV",
+    date: "May 10, 2025",
+    prizeAmount: "₹1,500",
+    guidelines: "https://docs.google.com/document/d/1XOVFR4BdEAJnOilsPw7Lw9bkxzY3q8MqFdkIRg59Wk8/edit?tab=t.0",
+    formUrl: "https://forms.gle/j54ncq4pxiHhCWeRA",
+    rules: [
+      "Any form of cheating, exploitation of bugs, or unfair advantage is strictly prohibited.",
+      "Offensive behavior or language will lead to disqualification.",
+      "No use of third-party apps or cheats.",
+      "Rounds may be paused/rescheduled during server issues at the organizer's discretion.",
+      "Disconnected players may rejoin, except during the finals.",
+    ],
+    timeSlots: [
+      "May 10, Qualifiers: 6:00-7:00 PM",
+      "May 12, Semi-Finals: 6:00-7:30 PM",
+      "May 14, Finals: 6:00-7:00 PM",
+    ],
+    venue: "G-Meet",
+  },
+  {
+    id: 5,
+    title: "COD-M",
+    description: "From chaos to crown, fun’s the only rule here.",
+    image: cod,
+    icon: <GamepadIcon className="h-6 w-6" />,
+    category: "Cosplay",
+    date: "May 11, 2025",
+    prizeAmount: "₹2,000",
+    guidelines: "https://docs.google.com/document/d/1XOVFR4BdEAJnOilsPw7Lw9bkxzY3q8MqFdkIRg59Wk8/edit?tab=t.0",
+    formUrl: "https://forms.gle/fVSyhGyk7viBb9wX7",
+    rules: [
+      "Any form of cheating, exploitation of bugs, or unfair advantage is strictly prohibited.",
+      "Offensive behavior or language will lead to disqualification.",
+      "No use of third-party apps or cheats.",
+      "Rounds may be paused/rescheduled during server issues at the organizer's discretion.",
+      "Disconnected players may rejoin, except during the finals.",
+    ],
+    timeSlots: [
+      "May 11, Qualifiers: 7:30-9:00 PM",
+      "May 13, Semi-Finals: 7:30-9:00 PM",
+      "May 14, Finals: 9:00-10:00 PM",
+    ],
+    venue: "G-Meet",
+  },
+];

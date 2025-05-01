@@ -13,6 +13,7 @@ import Tesserex from "./pages/tesserex";
 import PastEvents from "./pages/pastEvents";
 import Team from "./pages/team";
 import Helpdesk from "./pages/helpdesk";
+import Register from "./pages/register";
 
 function App() {
   const location = useLocation();
@@ -25,37 +26,52 @@ function App() {
     <AuthProvider>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/tesserex"
           element={
-            // <ProtectedRoute>
-            // </ProtectedRoute>
+            <ProtectedRoute>
               <Tesserex />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/register/:id"
+          element={
+            <ProtectedRoute>
+              <Register />
+            </ProtectedRoute>
           }
         />
         <Route
           path="/past-events"
           element={
+            <ProtectedRoute>
               <PastEvents />
-            // <ProtectedRoute>
-            // </ProtectedRoute>
+            </ProtectedRoute>
           }
         />
         <Route
           path="/team"
           element={
-            // <ProtectedRoute>
-            // </ProtectedRoute>
+            <ProtectedRoute>
               <Team />
+            </ProtectedRoute>
           }
         />
         <Route
           path="/helpdesk"
           element={
-            // <ProtectedRoute>
-            // </ProtectedRoute>
+            <ProtectedRoute>
               <Helpdesk />
+            </ProtectedRoute>
           }
         />
         <Route path="/login" element={<Login />} />

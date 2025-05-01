@@ -2,29 +2,87 @@ import React from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import EventGrid from "../components/tesserect/eventGrid";
 import Footer from "../components/footer";
-import { CalendarDays, Trophy, BookOpen } from "lucide-react"; // Added BookOpen icon
+import { CalendarDays, Trophy, BookOpen } from "lucide-react"; // Added BookOpen icon\
+import saranda from "./Saranda-House.png";
+import namdafa from "./namdapha.png";
+import nilgiri from "./nilgiri.png";
+import nexGen from "./NexGen-Club.png";
+import tesserect from "./Tesseract.png";
+import rampage from "./Rampage-house.png";
 
 export default function Tesserex() {
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 500], [0, -100]);
+  const allLogos = [
+    { icon: saranda, size: 80 },
+    { icon: namdafa, size: 80 },
+    { icon: nilgiri, size: 80 },
+    { icon: nexGen, size: 80 },
+    { icon: tesserect, size: 80 },
+    { icon: rampage, size: 80 },
+  ];
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#0a0014] via-[#000919] to-[#0a0014] text-white pt-16 overflow-x-hidden">
       <section className="mt-12">
         <div className="container mx-auto px-4">
           {/* Title Section - aligned with Team.jsx */}
-          <div className="text-center mb-10">
-            <motion.h1 className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#ff6b6b] to-[#4d9fff] font-poppins">
-              ARENA-X
-            </motion.h1>
+          <div className="text-center mb-6 py-12 font-tinos">
+            <div className="flex items-center justify-center flex-wrap gap-x-6 gap-y-4">
+              {/* Logos to the left of the title */}
+              {allLogos.slice(0, 3).map((logo, index) => (
+                <motion.img
+                  key={`logo-left-${index}`}
+                  src={logo.icon}
+                  alt={`logo-${index}`}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.15 }}
+                  style={{ height: `${logo.size + 20}px`, width: "auto" }}
+                  className="rounded-full mx-4"
+                />
+              ))}
+
+              {/* Title in the center */}
+              <motion.h1
+                className="relative text-5xl md:text-6xl px-6 md:px-4 font-extrabold font-tinos text-transparent bg-clip-text bg-gradient-to-r from-[#ff6b6b] to-[#4d9fff] mx-6"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8 }}
+              >
+                ARENA-X
+                <span
+                  className="absolute left-1/2 transform -translate-x-1/2 bottom-[-8px] h-[3px] w-[120%] bg-gradient-to-r from-[#ff6b6b] to-[#4d9fff] rounded-full"
+                  style={{
+                    boxShadow:
+                      "0 0 8px rgba(255,107,107,0.4), 0 0 12px rgba(77,159,255,0.3)",
+                  }}
+                />
+              </motion.h1>
+
+              {/* Logos to the right of the title */}
+              {allLogos.slice(3).map((logo, index) => (
+                <motion.img
+                  key={`logo-right-${index}`}
+                  src={logo.icon}
+                  alt={`logo-${index + 3}`}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.15 }}
+                  style={{ height: `${logo.size + 20}px`, width: "auto" }}
+                  className="rounded-full mx-4"
+                />
+              ))}
+            </div>
 
             <motion.p
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.5 }}
-              className="text-lg max-w-2xl mx-auto text-[#d4d4d8]"
+              className="text-lg max-w-2xl mx-auto text-[#d4d4d8] mt-6"
             >
-              The ultimate esports tournament — register solo or squad, and make your mark.
+              The ultimate esports tournament — register solo or squad, and make
+              your mark.
             </motion.p>
           </div>
 
@@ -57,13 +115,14 @@ export default function Tesserex() {
               </span>
             </div>
           </motion.div>
+          
 
           {/* Rule Book Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="flex justify-center items-center mb-6"
+            className="flex justify-center items-center mb-20 md:mb-8"
           >
             <div className="relative">
               {/* Continuous glowing border effect */}

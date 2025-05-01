@@ -81,6 +81,7 @@ module.exports = {
 
       fontFamily: {
         sans: ['var(--font-inter)'], // Custom font setup
+        tinos: ['Tinos', 'serif'],
       },
     },
   },

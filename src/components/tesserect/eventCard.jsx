@@ -1,24 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Calendar, ArrowRight, Zap } from "lucide-react";
-
-// Define event type (for props)
-/**
- * @typedef {Object} Event
- * @property {number} id
- * @property {string} title
- * @property {string} category
- * @property {string} date
- * @property {string} prizeAmount
- * @property {string} description
- * @property {string} image
- */
+import { Link } from "react-router-dom"; // For Vite-React router
+import bgmi from "./BGMI.png"
 
 /**
  * Event card component with enhanced sci-fi theme and more subtle animations
  * @param {Object} props
- * @param {Event} props.event - Event data
+ * @param {Object} props.event - Event data
+ * @param {function} props.onRegisterClick - Optional callback for register button click
  */
-const EventCard = ({ event }) => {
+const EventCard = ({ event, onRegisterClick }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isButtonHovered, setIsButtonHovered] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -41,8 +32,8 @@ const EventCard = ({ event }) => {
       }));
   }, []);
 
-  // Sample event data for preview
-  event = event || {
+  // Sample event data for preview if none provided
+  const defaultEvent = {
     id: 1,
     title: "Cyber Gaming Tournament",
     category: "Gaming",
@@ -53,6 +44,9 @@ const EventCard = ({ event }) => {
     image: "/api/placeholder/500/300",
   };
 
+  // Use provided event or default
+  const displayEvent = event || defaultEvent;
+
   // Handle mouse move for subtle spotlight effect
   const handleMouseMove = (e) => {
     if (!cardRef.current) return;
@@ -62,6 +56,13 @@ const EventCard = ({ event }) => {
     const y = e.clientY - rect.top;
 
     setMousePosition({ x, y });
+  };
+
+  // Handle register button click
+  const handleRegisterClick = () => {
+    if (onRegisterClick) {
+      onRegisterClick(displayEvent);
+    }
   };
 
   // Get icon based on category
@@ -376,8 +377,8 @@ const EventCard = ({ event }) => {
         <div className="relative h-48 overflow-hidden">
           {/* Image with enhanced zoom effect */}
           <img
-            src={event.image || "/api/placeholder/500/300"}
-            alt={event.title}
+            src={displayEvent.image}
+            alt={displayEvent.title}
             className="w-full h-full object-cover"
             style={{
               transition: "transform 700ms ease",
@@ -417,7 +418,7 @@ const EventCard = ({ event }) => {
               transform: isHovered ? "scale(1.05)" : "scale(1)",
             }}
           >
-            {getCategoryIcon(event.category)}
+            {displayEvent.icon || getCategoryIcon(displayEvent.category)}
           </div>
 
           {/* Enhanced Event date with futuristic design */}
@@ -433,7 +434,7 @@ const EventCard = ({ event }) => {
             }}
           >
             <Calendar className="h-3 w-3 text-blue-400" />
-            <span>{event.date}</span>
+            <span>{displayEvent.date}</span>
           </div>
 
           {/* Enhanced title area with holographic effect */}
@@ -449,15 +450,15 @@ const EventCard = ({ event }) => {
                 transition: "text-shadow 0.3s ease",
               }}
             >
-              {event.title}
+              {displayEvent.title}
             </h3>
             <div className="flex items-center gap-2">
               <span className="text-sm" style={{ color: "#ff6b6b" }}>
-                {event.category}
+                {displayEvent.category}
               </span>
               <div className="h-4 w-px bg-white bg-opacity-20" />
               <span className="text-sm" style={{ color: "#4d9fff" }}>
-                Prize: {event.prizeAmount}
+                Prize: {displayEvent.prizeAmount}
               </span>
             </div>
           </div>
@@ -465,99 +466,101 @@ const EventCard = ({ event }) => {
 
         {/* Description and action section */}
         <div className="p-5 flex-grow flex flex-col">
-          <p className="text-gray-300 mb-6 flex-grow">{event.description}</p>
+          <p className="text-gray-300 mb-6 flex-grow">{displayEvent.description}</p>
 
           {/* Enhanced 3D button with improved distinct hover effect */}
-          <button
-            className="w-full flex items-center justify-between px-5 py-2.5 rounded-lg relative overflow-hidden"
-            onMouseEnter={() => setIsButtonHovered(true)}
-            onMouseLeave={() => setIsButtonHovered(false)}
-            style={{
-              background: isButtonHovered
-                ? "linear-gradient(135deg, rgba(255, 100, 100, 0.12), rgba(255, 120, 120, 0.06))"
-                : "linear-gradient(135deg, rgba(30, 90, 190, 0.35), rgba(25, 80, 170, 0.25))",
-              border: isButtonHovered
-                ? "1.5px solid rgba(255, 120, 120, 0.6)"
-                : isHovered
-                ? "1.5px solid rgba(40, 120, 230, 0.8)"
-                : "1.5px solid rgba(40, 120, 230, 0.4)",
-              outline: isButtonHovered
-                ? "2px solid rgba(255, 100, 100, 0.15)"
-                : "2px solid rgba(77, 159, 255, 0.08)",
-              color: "white",
-              backdropFilter: "blur(6px)",
-              boxShadow: isButtonHovered
-                ? "0 0 10px rgba(255, 100, 100, 0.2), inset 0 0 6px rgba(255, 120, 120, 0.1)"
-                : isHovered
-                ? "0 0 10px rgba(40, 120, 230, 0.3), inset 0 0 5px rgba(40, 120, 230, 0.15)"
-                : "0 0 3px rgba(40, 120, 230, 0.08)",
-              transition: "all 0.35s ease",
-            }}
-          >
-            {/* Sliding shine */}
-            <div
+          <Link to={`/register/${displayEvent.id}`} onClick={handleRegisterClick}>
+            <button
+              className="w-full flex items-center justify-between px-5 py-2.5 rounded-lg relative overflow-hidden"
+              onMouseEnter={() => setIsButtonHovered(true)}
+              onMouseLeave={() => setIsButtonHovered(false)}
               style={{
-                position: "absolute",
-                inset: 0,
-                width: "33%",
-                height: "100%",
-                backgroundColor: "rgba(255, 255, 255, 0.30)",
-                transform: isButtonHovered
-                  ? "skewX(15deg) translateX(250%)"
-                  : "skewX(15deg) translateX(-100%)",
-                transition: "transform 0.8s ease-in-out",
-              }}
-            />
-
-            {/* Radial glow */}
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                opacity: isButtonHovered ? 1 : 0,
-                background:
-                  "radial-gradient(circle at center, rgba(255, 120, 120, 0.1), transparent 75%)",
-                transition: "opacity 0.5s ease",
-                pointerEvents: "none",
-              }}
-            />
-
-            {/* Border ring glow */}
-            <div
-              style={{
-                position: "absolute",
-                inset: "-2px",
-                borderRadius: "inherit",
+                background: isButtonHovered
+                  ? "linear-gradient(135deg, rgba(255, 100, 100, 0.12), rgba(255, 120, 120, 0.06))"
+                  : "linear-gradient(135deg, rgba(30, 90, 190, 0.35), rgba(25, 80, 170, 0.25))",
                 border: isButtonHovered
-                  ? "1px solid rgba(255, 120, 120, 0.3)"
-                  : "1px solid rgba(77, 159, 255, 0.15)",
+                  ? "1.5px solid rgba(255, 120, 120, 0.6)"
+                  : isHovered
+                  ? "1.5px solid rgba(40, 120, 230, 0.8)"
+                  : "1.5px solid rgba(40, 120, 230, 0.4)",
+                outline: isButtonHovered
+                  ? "2px solid rgba(255, 100, 100, 0.15)"
+                  : "2px solid rgba(77, 159, 255, 0.08)",
+                color: "white",
+                backdropFilter: "blur(6px)",
                 boxShadow: isButtonHovered
-                  ? "0 0 8px 1.5px rgba(255, 120, 120, 0.25)"
-                  : "0 0 6px 1px rgba(77, 159, 255, 0.08)",
-                transition: "all 0.4s ease",
-                pointerEvents: "none",
-              }}
-            />
-
-            <span
-              className="font-semibold tracking-wide"
-              style={{ fontFamily: "'Orbitron', sans-serif", zIndex: 1 }}
-            >
-              REGISTER NOW
-            </span>
-
-            <div
-              style={{
-                transform: isButtonHovered
-                  ? "translateX(6px)"
-                  : "translateX(0)",
-                transition: "transform 0.3s ease",
-                zIndex: 1,
+                  ? "0 0 10px rgba(255, 100, 100, 0.2), inset 0 0 6px rgba(255, 120, 120, 0.1)"
+                  : isHovered
+                  ? "0 0 10px rgba(40, 120, 230, 0.3), inset 0 0 5px rgba(40, 120, 230, 0.15)"
+                  : "0 0 3px rgba(40, 120, 230, 0.08)",
+                transition: "all 0.35s ease",
               }}
             >
-              <ArrowRight className="h-4 w-4" />
-            </div>
-          </button>
+              {/* Sliding shine */}
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  width: "33%",
+                  height: "100%",
+                  backgroundColor: "rgba(255, 255, 255, 0.30)",
+                  transform: isButtonHovered
+                    ? "skewX(15deg) translateX(250%)"
+                    : "skewX(15deg) translateX(-100%)",
+                  transition: "transform 0.8s ease-in-out",
+                }}
+              />
+
+              {/* Radial glow */}
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  opacity: isButtonHovered ? 1 : 0,
+                  background:
+                    "radial-gradient(circle at center, rgba(255, 120, 120, 0.1), transparent 75%)",
+                  transition: "opacity 0.5s ease",
+                  pointerEvents: "none",
+                }}
+              />
+
+              {/* Border ring glow */}
+              <div
+                style={{
+                  position: "absolute",
+                  inset: "-2px",
+                  borderRadius: "inherit",
+                  border: isButtonHovered
+                    ? "1px solid rgba(255, 120, 120, 0.3)"
+                    : "1px solid rgba(77, 159, 255, 0.15)",
+                  boxShadow: isButtonHovered
+                    ? "0 0 8px 1.5px rgba(255, 120, 120, 0.25)"
+                    : "0 0 6px 1px rgba(77, 159, 255, 0.08)",
+                  transition: "all 0.4s ease",
+                  pointerEvents: "none",
+                }}
+              />
+
+              <span
+                className="font-semibold tracking-wide"
+                style={{ fontFamily: "'Orbitron', sans-serif", zIndex: 1 }}
+              >
+                REGISTER NOW
+              </span>
+
+              <div
+                style={{
+                  transform: isButtonHovered
+                    ? "translateX(6px)"
+                    : "translateX(0)",
+                  transition: "transform 0.3s ease",
+                  zIndex: 1,
+                }}
+              >
+                <ArrowRight className="h-4 w-4" />
+              </div>
+            </button>
+          </Link>
         </div>
 
         {/* Always present continuously floating particles */}
@@ -583,7 +586,7 @@ const EventCard = ({ event }) => {
       </div>
 
       {/* CSS for animations */}
-      <style jsx>{`
+      <style jsx="true">{`
         @keyframes gradientFlow {
           0% {
             background-position: 0% top;

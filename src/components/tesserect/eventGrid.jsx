@@ -1,65 +1,142 @@
 import React, { useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import EventCard from "./eventCard";
+import { useNavigate } from "react-router-dom"; // Using React Router's useNavigate instead of Next.js router
+import EventCard from "./eventCard"; // Make sure the path matches your file structure
 import { GamepadIcon, Film, Music, Tv, Users } from "lucide-react";
+import bgmi from "./BGMI.png";
+import ff from './Free-Fire.png';
+import carnival from './Carnival.png';
+import clashroyale from './Clash-Royale.png';
+import cod from './COD.png';
 
+// Sample events data with additional properties for the register page
 const events = [
   {
     id: 1,
-    title: "Gaming Tournament",
-    description:
-      "Compete in our multiplayer gaming tournament with amazing prizes!",
-    image: "/placeholder.svg?height=400&width=600",
+    title: "BGMI",
+    description: "From Pochinki to Paradise, we slay every single zone.",
+    image: bgmi,
     icon: <GamepadIcon className="h-6 w-6" />,
-    category: "Gaming",
-    date: "June 15, 2025",
-    prizeAmount: "₹10,000",
+    category: "Team E-Sport",
+    date: "May 10, 2025",
+    prizeAmount: "₹3,000",
+    guidelines: "https://example.com/gaming-guidelines",
+    formUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLSdGJxMkdJV-TzCY-xM-5UEMnUfJG9YuEK0PV5UAIQQZrXJHFQ/viewform?embedded=true",
+    rules: [
+      "Participants must be 18 years or older",
+      "Teams of 4 players maximum",
+      "Own gaming peripherals allowed",
+      "Tournament format will be double elimination",
+      "Judges' decisions are final",
+      "No cheating or exploits allowed",
+      "Be respectful to all participants",
+    ],
+    startTime: "10:00 AM",
+    endTime: "6:00 PM",
+    venue: "Main Auditorium, Block A",
   },
   {
     id: 2,
-    title: "Movie Night",
-    description: "Join us for a special screening of the latest blockbuster!",
-    image: "/placeholder.svg?height=400&width=600",
-    icon: <Film className="h-6 w-6" />,
-    category: "Movies",
-    date: "June 18, 2025",
-    prizeAmount: "₹5,000",
+    title: "Free Fire",
+    description: "Clutching in style, dropping bodies with every booyah earned.",
+    image: ff,
+    icon: <GamepadIcon className="h-6 w-6" />,
+    category: "Team E-Sport",
+    date: "May 11, 2025",
+    prizeAmount: "₹2,500",
+    guidelines: "https://example.com/movie-guidelines",
+    formUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLSdGJxMkdJV-TzCY-xM-5UEMnUfJG9YuEK0PV5UAIQQZrXJHFQ/viewform?embedded=true",
+    rules: [
+      "Seating is on a first-come, first-served basis",
+      "No recording devices allowed",
+      "Please silence all mobile phones during the screening",
+      "No outside food or beverages",
+      "Arrive at least 15 minutes before showtime",
+    ],
+    startTime: "7:00 PM",
+    endTime: "10:00 PM",
+    venue: "Cinema Hall, Block B",
   },
   {
     id: 3,
-    title: "Music Quiz",
-    description: "Test your music knowledge in this fun and challenging quiz!",
-    image: "/placeholder.svg?height=400&width=600",
-    icon: <Music className="h-6 w-6" />,
-    category: "Music",
-    date: "June 20, 2025",
-    prizeAmount: "₹7,500",
+    title: "Carnival",
+    description: "Every card counts when victory’s just one tower away.",
+    image: carnival,
+    icon: <GamepadIcon className="h-6 w-6" />,
+    category: "Solo E-Sport",
+    date: "May 15, 2025",
+    prizeAmount: "₹1,000",
+    guidelines: "https://example.com/music-guidelines",
+    formUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLSdGJxMkdJV-TzCY-xM-5UEMnUfJG9YuEK0PV5UAIQQZrXJHFQ/viewform?embedded=true",
+    rules: [
+      "Teams of 2-4 members",
+      "No use of mobile phones or internet during the quiz",
+      "Multiple rounds covering different music genres",
+      "Tie-breaker rounds will be available if needed",
+      "Judges' decisions are final",
+      "Registration required for all participants",
+    ],
+    startTime: "6:00 PM",
+    endTime: "9:00 PM",
+    venue: "Music Hall, Block C",
   },
   {
     id: 4,
-    title: "TV Series Marathon",
-    description:
-      "Binge-watch the most popular TV series with fellow enthusiasts!",
-    image: "/placeholder.svg?height=400&width=600",
-    icon: <Tv className="h-6 w-6" />,
-    category: "TV",
-    date: "June 22, 2025",
-    prizeAmount: "₹3,000",
+    title: "Clash Royale",
+    description: "Guns loaded, squad locked, missions clear — no mercy given.",
+    image: clashroyale,
+    icon: <GamepadIcon className="h-6 w-6" />,
+    category: "Solo E-Sport",
+    date: "May 10, 2025",
+    prizeAmount: "₹1,500",
+    guidelines: "https://example.com/tv-guidelines",
+    formUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLSdGJxMkdJV-TzCY-xM-5UEMnUfJG9YuEK0PV5UAIQQZrXJHFQ/viewform?embedded=true",
+    rules: [
+      "Open to all TV enthusiasts",
+      "Comfortable seating provided",
+      "Snacks and refreshments available",
+      "Discussion sessions between episodes",
+      "No spoilers for future episodes",
+      "Please be respectful of others' opinions", 
+    ],
+    startTime: "12:00 PM",
+    endTime: "8:00 PM",
+    venue: "Lounge Area, Block D",
   },
   {
     id: 5,
-    title: "Cosplay Contest",
-    description: "Show off your best costume and win exciting prizes!",
-    image: "/placeholder.svg?height=400&width=600",
-    icon: <Users className="h-6 w-6" />,
-    category: "Cosplay",
-    date: "June 25, 2025",
-    prizeAmount: "₹12,000",
+    title: "COD-M",
+    description: "From chaos to crown, fun’s the only rule here.",
+    image: cod,
+    icon: <GamepadIcon className="h-6 w-6" />,
+    category: "Team E-Sport",
+    date: "May 11, 2025",
+    prizeAmount: "₹2,000",
+    guidelines: "https://example.com/cosplay-guidelines",
+    formUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLSdGJxMkdJV-TzCY-xM-5UEMnUfJG9YuEK0PV5UAIQQZrXJHFQ/viewform?embedded=true",
+    rules: [
+      "Original and purchased costumes allowed",
+      "Pre-registration required with costume details",
+      "Weapons must be peace-bonded",
+      "No offensive or inappropriate costumes",
+      "Judging based on accuracy, craftsmanship, and performance",
+      "Photo booth available for all participants",
+      "Winners announced at the end of the event",
+    ],
+    startTime: "2:00 PM",
+    endTime: "7:00 PM",
+    venue: "Main Hall, Block E",
   },
 ];
 
 const EventGrid = () => {
   const containerRef = useRef(null);
+  const navigate = useNavigate(); // Using React Router's navigate
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -71,6 +148,14 @@ const EventGrid = () => {
     },
   };
 
+  // Handle register button click to navigate to register page with event data
+  const handleRegisterClick = (event) => {
+    // Navigate to register page with event ID
+    navigate(`/register/${event.id}`, { 
+      state: { eventData: event } // Pass event data through state
+    });
+  };
+
   return (
     <div
       className="relative py-16 overflow-hidden w-full"
@@ -80,7 +165,7 @@ const EventGrid = () => {
         overflowX: "hidden",
       }}
     >
-      {/* Replicated JoinSection orb animation */}
+      {/* Animated background orbs */}
       <div className="absolute inset-0 overflow-hidden">
         {[...Array(5)].map((_, i) => (
           <motion.div
@@ -103,7 +188,7 @@ const EventGrid = () => {
             }}
             transition={{
               duration: Math.random() * 20 + 20,
-              repeat: Number.POSITIVE_INFINITY,
+              repeat: Infinity,
               ease: "easeInOut",
             }}
           />
@@ -159,7 +244,11 @@ const EventGrid = () => {
               }}
             >
               {events.map((event) => (
-                <EventCard key={event.id} event={event} />
+                <EventCard 
+                  key={event.id} 
+                  event={event} 
+                  onRegisterClick={() => handleRegisterClick(event)} 
+                />
               ))}
             </motion.div>
           </motion.div>

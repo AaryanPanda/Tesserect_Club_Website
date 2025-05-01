@@ -15,33 +15,34 @@ export default function Login() {
     
     try {
       const provider = new GoogleAuthProvider();
-      // Add these security configurations
       provider.setCustomParameters({
         prompt: 'select_account',
-        hd: 'ds.study.iitm.ac.in' // Restrict to specific domain
+        hd: 'iitm.ac.in' // Generalized domain prompt for IITM
       });
-      
+
       const result = await signInWithPopup(auth, provider);
       
-      // Log the login attempt
       Analytics.events.userLogin('google');
-      
+
       const email = result.user.email;
-      
-      if (!email.endsWith('@ds.study.iitm.ac.in')) {
+      const allowedDomains = ['ds.study.iitm.ac.in', 'es.study.iitm.ac.in'];
+      const emailDomain = email.split('@')[1];
+
+      if (!allowedDomains.includes(emailDomain)) {
         await auth.signOut();
-        setError('Please use your IITM email address (@ds.study.iitm.ac.in)');
+        setError('Please use your IITM email address (@ds.study.iitm.ac.in or @es.study.iitm.ac.in)');
         Analytics.logUserEvent('login_error', { 
           reason: 'invalid_email_domain',
-          email_domain: email.split('@')[1]
+          email_domain: emailDomain
         });
         return;
       }
 
       await createUserProfile(result.user);
       Analytics.logUserEvent('login_success', {
-        user_email_domain: 'ds.study.iitm.ac.in'
+        user_email_domain: emailDomain
       });
+
       navigate('/');
     } catch (error) {
       Analytics.logUserEvent('login_error', {
@@ -76,7 +77,7 @@ export default function Login() {
         </button>
         
         <p className="mt-6 text-sm text-gray-400 text-center">
-          Only @ds.study.iitm.ac.in email addresses are allowed
+          Only IITM email addresses (@ds.study.iitm.ac.in, @es.study.iitm.ac.in) are allowed
         </p>
 
         {error && (

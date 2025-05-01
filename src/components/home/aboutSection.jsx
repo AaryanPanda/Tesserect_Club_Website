@@ -147,24 +147,24 @@ export default function AboutSection() {
 
               {/* Animated Border Effect */}
               <div className="absolute inset-0 rounded-xl p-[2px] z-10">
-  <div 
-    className="absolute inset-0 rounded-xl"
-    style={{
-      background: `linear-gradient(90deg, transparent, ${space.color}80, transparent)`,
-      backgroundSize: '200% 200%',
-      animation: `borderGradient${index} 6s ease-in-out infinite`
-    }}
-  />
-  <style jsx>{`
-    @keyframes borderGradient${index} {
-      0% { background-position: 0% 50% }
-      50% { background-position: 100% 50% }
-      100% { background-position: 0% 50% }
-    }
-  `}</style>
-</div>
+                <div 
+                  className="absolute inset-0 rounded-xl"
+                  style={{
+                    background: `linear-gradient(90deg, transparent, ${space.color}80, transparent)`,
+                    backgroundSize: '200% 200%',
+                    animation: `borderGradient${index} 6s ease-in-out infinite`
+                  }}
+                />
+                <style jsx>{`
+                  @keyframes borderGradient${index} {
+                    0% { background-position: 0% 50% }
+                    50% { background-position: 100% 50% }
+                    100% { background-position: 0% 50% }
+                  }
+                `}</style>
+              </div>
 
-              <div className="relative z-20 p-6 border border-white/10 rounded-xl backdrop-blur-sm h-full flex flex-col items-center text-center min-h-[280px] group-hover:border-white/30 transition-all duration-300 bg-black/20">
+              <div className="relative z-20 p-6 border border-white/10 rounded-xl backdrop-blur-sm h-full flex flex-col items-center text-center justify-center min-h-[280px] group-hover:border-white/30 transition-all duration-300 bg-black/20">
                 <motion.div
                   className="text-5xl mb-4"
                   animate={{
@@ -185,33 +185,7 @@ export default function AboutSection() {
                   {space.name}
                 </h3>
 
-                <p className="text-gray-300 flex-grow">{space.description}</p>
-
-                <motion.div
-                  className="mt-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <a 
-                    href="#" 
-                    className="inline-flex items-center text-sm font-medium px-4 py-2 rounded-full" 
-                    style={{ 
-                      color: 'white',
-                      background: `linear-gradient(to right, ${space.color}, ${space.color}aa)`,
-                      boxShadow: `0 4px 10px -2px ${space.shadowColor}`
-                    }}
-                  >
-                    Explore {space.name}
-                    <svg
-                      className="ml-1 w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                  </a>
-                </motion.div>
+                <p className="text-gray-300">{space.description}</p>
               </div>
             </motion.div>
           ))}

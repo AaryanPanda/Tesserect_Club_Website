@@ -821,7 +821,7 @@ before:[webkit-text-stroke:1px_rgba(255,255,255,0.4)]"
     </Link>
 
     <a
-      href="#join"
+      href="https://tinyurl.com/jointesseract"
       className="inline-flex h-10 items-center justify-center rounded-full border border-[#ff6b6b] bg-gradient-to-r from-[#0A0C14] to-[#141C2B] px-5 py-1 text-base font-medium text-[#ff6b6b] transition-all duration-300 hover:bg-gradient-to-r hover:from-[#ff6b6b]/30 hover:to-[#4d9fff]/30 relative overflow-hidden group"
     >
       <span className="absolute inset-0 w-0 bg-gradient-to-r from-[#ff6b6b]/20 to-[#4d9fff]/20 transition-all duration-500 ease-out group-hover:w-full"></span>

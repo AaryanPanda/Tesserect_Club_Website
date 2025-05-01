@@ -45,17 +45,17 @@ function App() {
         <Route
           path="/team"
           element={
-            <ProtectedRoute>
+            // <ProtectedRoute>
+            // </ProtectedRoute>
               <Team />
-            </ProtectedRoute>
           }
         />
         <Route
           path="/helpdesk"
           element={
-            <ProtectedRoute>
+            // <ProtectedRoute>
+            // </ProtectedRoute>
               <Helpdesk />
-            </ProtectedRoute>
           }
         />
         <Route path="/login" element={<Login />} />

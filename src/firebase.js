@@ -1,8 +1,10 @@
+// Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
 import { getFirestore, doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { getAnalytics, logEvent } from 'firebase/analytics';
 
+// Firebase configuration
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
     authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -17,22 +19,49 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
+auth.useDeviceLanguage(); // Set language to device language
 export const db = getFirestore(app);
 export const analytics = getAnalytics(app);
+
+// Export additional auth methods
+export { signInWithPopup, GoogleAuthProvider, signOut };
+
+// Analytics helper
+export const Analytics = {
+  logPageView: (pagePath) => {
+    logEvent(analytics, 'page_view', {
+      page_path: pagePath
+    });
+  },
+  logUserEvent: (eventName, params = {}) => {
+    logEvent(analytics, eventName, params);
+  },
+  events: {
+    userLogin: (method) => {
+      logEvent(analytics, 'login', { method });
+    },
+    eventRegistration: (eventName) => {
+      logEvent(analytics, 'event_registration', { event_name: eventName });
+    }
+  }
+};
 
 // Function to create/update user profile
 export const createUserProfile = async (user) => {
     if (!user) return;
 
     const userRef = doc(db, 'users', user.uid);
+    const email = user.email;
+    const emailDomain = email.split('@')[1];
     
     const userData = {
-        email: user.email,
+        email: email,
         displayName: user.displayName || '',
         photoURL: user.photoURL || '',
         lastLogin: serverTimestamp(),
         createdAt: serverTimestamp(),
-        role: 'user' // Default role
+        role: 'user', // Default role
+        institution: 'IITM' // Both domains are from IITM now
     };
 
     try {
@@ -44,47 +73,4 @@ export const createUserProfile = async (user) => {
     }
 };
 
-// Analytics utility functions
-export const Analytics = {
-    // Track page views
-    logPageView: (pageName) => {
-        logEvent(analytics, 'page_view', {
-            page_title: pageName,
-            page_location: window.location.href,
-            page_path: window.location.pathname
-        });
-    },
-
-    // Track user actions
-    logUserEvent: (eventName, params = {}) => {
-        logEvent(analytics, eventName, {
-            ...params,
-            timestamp: new Date().toISOString()
-        });
-    },
-
-    // Track specific events for TESSEREX
-    events: {
-        eventRegistration: (eventName) => {
-            logEvent(analytics, 'event_registration', {
-                event_name: eventName,
-                timestamp: new Date().toISOString()
-            });
-        },
-
-        userLogin: (method) => {
-            logEvent(analytics, 'login', {
-                method: method,
-                timestamp: new Date().toISOString()
-            });
-        },
-
-        buttonClick: (buttonName, location) => {
-            logEvent(analytics, 'button_click', {
-                button_name: buttonName,
-                location: location,
-                timestamp: new Date().toISOString()
-            });
-        }
-    }
-};
+export { app };

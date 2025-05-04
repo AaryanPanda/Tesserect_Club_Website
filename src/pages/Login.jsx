@@ -1,13 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth, createUserProfile, Analytics } from '../firebase';
+import { auth, createUserProfile, Analytics, db } from '../firebase';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { FcGoogle } from 'react-icons/fc';
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 
 export default function Login() {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  // Check for rate limiting
+  const checkRateLimit = async (uid) => {
+    try {
+      const rateLimitRef = doc(db, 'rateLimit', uid);
+      const rateLimitDoc = await getDoc(rateLimitRef);
+      
+      if (rateLimitDoc.exists()) {
+        const data = rateLimitDoc.data();
+        const now = Date.now();
+        
+        // If user has attempted more than 5 logins in the last 15 minutes
+        if (data.attempts >= 5 && now - data.timestamp < 15 * 60 * 1000) {
+          return false;
+        }
+        
+        // Update attempt count
+        await setDoc(rateLimitRef, {
+          attempts: data.attempts + 1,
+          timestamp: now
+        });
+      } else {
+        // First attempt
+        await setDoc(rateLimitRef, {
+          attempts: 1,
+          timestamp: Date.now()
+        });
+      }
+      
+      return true;
+    } catch (error) {
+      console.error("Rate limit check failed:", error);
+      return true; // Allow on error to prevent blocking legitimate users
+    }
+  };
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
@@ -17,38 +53,52 @@ export default function Login() {
       const provider = new GoogleAuthProvider();
       // Add these security configurations
       provider.setCustomParameters({
-        prompt: 'select_account',
-        hd: 'ds.study.iitm.ac.in' // Restrict to specific domain
+        prompt: 'select_account'
       });
       
+      // Use popup for both mobile and desktop
       const result = await signInWithPopup(auth, provider);
       
       // Log the login attempt
       Analytics.events.userLogin('google');
       
-      const email = result.user.email;
-      
-      if (!email.endsWith('@ds.study.iitm.ac.in')) {
-        await auth.signOut();
-        setError('Please use your IITM email address (@ds.study.iitm.ac.in)');
-        Analytics.logUserEvent('login_error', { 
-          reason: 'invalid_email_domain',
-          email_domain: email.split('@')[1]
-        });
-        return;
+      if (result && result.user) {
+        // Check rate limit
+        const canProceed = await checkRateLimit(result.user.uid);
+        if (!canProceed) {
+          await auth.signOut();
+          setError('Too many login attempts. Please try again later.');
+          return;
+        }
+        
+        // Validate email domain
+        const email = result.user.email;
+        const allowedDomains = ['ds.study.iitm.ac.in', 'es.study.iitm.ac.in'];
+        const emailDomain = email.split('@')[1];
+        
+        if (!allowedDomains.includes(emailDomain)) {
+          await auth.signOut();
+          setError('Please use your IITM email address (@ds.study.iitm.ac.in or @es.study.iitm.ac.in)');
+          Analytics.logUserEvent('login_error', { 
+            reason: 'invalid_email_domain',
+            email_domain: emailDomain
+          });
+          return;
+        }
+        
+        // Create user profile
+        await createUserProfile(result.user);
+        
+        // Navigate to home page
+        navigate('/');
       }
-
-      await createUserProfile(result.user);
-      Analytics.logUserEvent('login_success', {
-        user_email_domain: 'ds.study.iitm.ac.in'
-      });
-      navigate('/');
     } catch (error) {
+      console.error("Sign in error:", error);
+      setError(`Authentication error: ${error.message}`);
       Analytics.logUserEvent('login_error', {
         error_code: error.code,
         error_message: error.message
       });
-      setError(error.message);
     } finally {
       setIsLoading(false);
     }
@@ -76,7 +126,7 @@ export default function Login() {
         </button>
         
         <p className="mt-6 text-sm text-gray-400 text-center">
-          Only @ds.study.iitm.ac.in email addresses are allowed
+          Only @ds.study.iitm.ac.in and @es.study.iitm.ac.in email addresses are allowed
         </p>
 
         {error && (

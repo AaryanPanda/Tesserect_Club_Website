@@ -60,7 +60,7 @@ export const events = [
   {
     id: 3,
     title: "Carnival",
-    description: "Every card counts when victory’s just one tower away.",
+    description: "From chaos to crown, fun’s the only rule here.",
     image: carnival,
     icon: <GamepadIcon className="h-6 w-6" />,
     category: "E-Gaming",
@@ -83,7 +83,7 @@ export const events = [
   {
     id: 4,
     title: "Clash Royale",
-    description: "Guns loaded, squad locked, missions clear — no mercy given.",
+    description: "Every card counts when victory’s just one tower away.",
     image: clashroyale,
     icon: <GamepadIcon className="h-6 w-6" />,
     category: "E-Gaming",
@@ -108,7 +108,7 @@ export const events = [
   {
     id: 5,
     title: "COD-M",
-    description: "From chaos to crown, fun’s the only rule here.",
+    description: "Guns loaded, squad locked, missions clear — no mercy given.",
     image: cod,
     icon: <GamepadIcon className="h-6 w-6" />,
     category: "E-Gaming",

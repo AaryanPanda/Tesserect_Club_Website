@@ -3,6 +3,8 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import logo from './Tesseract_Logo.png'
+
 
 // Text spirit animation component
 const TextSpirit = () => {
@@ -460,8 +462,9 @@ const AnimatedLogo = () => {
         }}
       />
       <motion.img
-        src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/TESSERACT%20LOGO-7YUxzoNgZDHCMat3Lah5g5J7M9V9Uv.png"
+        src={logo}
         alt="Tesseract Club Logo"
+        style={{ borderRadius: '100px' }}
         className="w-full h-full object-contain relative z-10"
         animate={{
           rotateY: [0, 360],

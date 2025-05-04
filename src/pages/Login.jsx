@@ -1,55 +1,106 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { auth, createUserProfile, Analytics } from '../firebase';
-import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { FcGoogle } from 'react-icons/fc';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { auth, createUserProfile, Analytics, db } from "../firebase";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { FcGoogle } from "react-icons/fc";
+import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 
 export default function Login() {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Check for rate limiting
+  const checkRateLimit = async (uid) => {
+    try {
+      const rateLimitRef = doc(db, "rateLimit", uid);
+      const rateLimitDoc = await getDoc(rateLimitRef);
+
+      if (rateLimitDoc.exists()) {
+        const data = rateLimitDoc.data();
+        const now = Date.now();
+
+        // If user has attempted more than 5 logins in the last 15 minutes
+        if (data.attempts >= 5 && now - data.timestamp < 15 * 60 * 1000) {
+          return false;
+        }
+
+        // Update attempt count
+        await setDoc(rateLimitRef, {
+          attempts: data.attempts + 1,
+          timestamp: now,
+        });
+      } else {
+        // First attempt
+        await setDoc(rateLimitRef, {
+          attempts: 1,
+          timestamp: Date.now(),
+        });
+      }
+
+      return true;
+    } catch (error) {
+      console.error("Rate limit check failed:", error);
+      return true; // Allow on error to prevent blocking legitimate users
+    }
+  };
+
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const provider = new GoogleAuthProvider();
+      // Add these security configurations
       provider.setCustomParameters({
-        prompt: 'select_account',
-        hd: 'iitm.ac.in' // Generalized domain prompt for IITM
+        prompt: "select_account",
       });
 
       const result = await signInWithPopup(auth, provider);
-      
-      Analytics.events.userLogin('google');
 
-      const email = result.user.email;
-      const allowedDomains = ['ds.study.iitm.ac.in', 'es.study.iitm.ac.in'];
-      const emailDomain = email.split('@')[1];
+      // Log the login attempt
+      Analytics.events.userLogin("google");
 
-      if (!allowedDomains.includes(emailDomain)) {
-        await auth.signOut();
-        setError('Please use your IITM email address (@ds.study.iitm.ac.in or @es.study.iitm.ac.in)');
-        Analytics.logUserEvent('login_error', { 
-          reason: 'invalid_email_domain',
-          email_domain: emailDomain
-        });
-        return;
+      if (result && result.user) {
+        // Check rate limit
+        const canProceed = await checkRateLimit(result.user.uid);
+        if (!canProceed) {
+          await auth.signOut();
+          setError("Too many login attempts. Please try again later.");
+          return;
+        }
+
+        // Validate email domain
+        const email = result.user.email;
+        const allowedDomains = ["ds.study.iitm.ac.in", "es.study.iitm.ac.in"];
+        const emailDomain = email.split("@")[1];
+
+        if (!allowedDomains.includes(emailDomain)) {
+          await auth.signOut();
+          setError(
+            "Please use your IITM email address (@ds.study.iitm.ac.in or @es.study.iitm.ac.in)"
+          );
+          Analytics.logUserEvent("login_error", {
+            reason: "invalid_email_domain",
+            email_domain: emailDomain,
+          });
+          return;
+        }
+
+        // Create user profile
+        await createUserProfile(result.user);
+
+        // Navigate to home page
+        navigate("/");
       }
-
-      await createUserProfile(result.user);
-      Analytics.logUserEvent('login_success', {
-        user_email_domain: emailDomain
-      });
-
-      navigate('/');
     } catch (error) {
-      Analytics.logUserEvent('login_error', {
+      console.error("Sign in error:", error);
+      setError(`Authentication error: ${error.message}`);
+
+      Analytics.logUserEvent("login_error", {
         error_code: error.code,
-        error_message: error.message
+        error_message: error.message,
       });
-      setError(error.message);
     } finally {
       setIsLoading(false);
     }
@@ -64,20 +115,20 @@ export default function Login() {
         <div className="text-center text-gray-300 mb-8">
           Please sign in with your IITM email address
         </div>
-        
+
         <button
           onClick={handleGoogleSignIn}
           disabled={isLoading}
           className={`w-full flex items-center justify-center gap-3 bg-white text-gray-800 px-6 py-3 rounded-lg font-medium transition-colors ${
-            isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'
+            isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-100"
           }`}
         >
           <FcGoogle className="text-xl" />
-          {isLoading ? 'Signing in...' : 'Sign in with Google'}
+          {isLoading ? "Signing in..." : "Sign in with Google"}
         </button>
-        
+
         <p className="mt-6 text-sm text-gray-400 text-center">
-          Only IITM email addresses (@ds.study.iitm.ac.in, @es.study.iitm.ac.in) are allowed
+          Only @ds.study.iitm.ac.in and @es.study.iitm.ac.in email addresses are allowed!
         </p>
 
         {error && (

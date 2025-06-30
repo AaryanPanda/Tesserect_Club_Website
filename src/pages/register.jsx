@@ -14,12 +14,12 @@ import {
 import { BookOpen } from "lucide-react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { events } from "./events.jsx";
-import saranda from "./Saranda-House.png";
-import namdafa from "./namdapha.png";
-import nilgiri from "./nilgiri.png";
-import nexGen from "./NexGen-Club.png";
-import tesserect from "./Tesseract.png";
-import rampage from "./Rampage-house.png";
+import saranda from "./pages-assets/Saranda-House.png";
+import namdafa from "./pages-assets/namdapha.png";
+import nilgiri from "./pages-assets/nilgiri.png";
+import nexGen from "./pages-assets/NexGen-Club.png";
+import tesserect from "./pages-assets/Tesseract.png";
+import rampage from "./pages-assets/Rampage-house.png";
 import { ArrowDownCircle } from 'lucide-react';
 
 

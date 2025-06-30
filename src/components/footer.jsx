@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import logo from "../assets/Tesseract_Logo-removebg.png";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -72,7 +73,7 @@ export default function Footer() {
               <div className="relative w-10 h-10 flex items-center justify-center">
                 <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#ff6b6b]/30 to-[#4d9fff]/30 blur-sm" />
                 <img
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/TESSERACT%20LOGO-7YUxzoNgZDHCMat3Lah5g5J7M9V9Uv.png"
+                  src={logo}
                   alt="Tesseract Logo"
                   className="w-10 h-10 object-contain relative z-10"
                 />
@@ -104,7 +105,7 @@ export default function Footer() {
                       : "https://www.linkedin.com/company/tesseract-iitm" // TODO: Replace with your LinkedIn profile link (e.g., https://linkedin.com/in/yourprofile)
                   }
                   className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border border-white/10 text-gray-400 hover:text-white hover:border-[#ff6b6b]/50 transition-colors"
-                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   rel="noopener noreferrer" // Security best practice for external links
                 >

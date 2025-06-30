@@ -3,12 +3,12 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import EventGrid from "../components/tesserect/eventGrid";
 import Footer from "../components/footer";
 import { CalendarDays, Trophy, BookOpen } from "lucide-react"; // Added BookOpen icon\
-import saranda from "./Saranda-House.png";
-import namdafa from "./namdapha.png";
-import nilgiri from "./nilgiri.png";
-import nexGen from "./NexGen-Club.png";
-import tesserect from "./Tesseract.png";
-import rampage from "./Rampage-house.png";
+import saranda from "./pages-assets/Saranda-House.png";
+import namdafa from "./pages-assets/namdapha.png";
+import nilgiri from "./pages-assets/nilgiri.png";
+import nexGen from "./pages-assets/NexGen-Club.png";
+import tesserect from "./pages-assets/Tesseract.png";
+import rampage from "./pages-assets/Rampage-house.png";
 
 export default function Tesserex() {
   const { scrollY } = useScroll();

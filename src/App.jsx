@@ -37,41 +37,41 @@ function App() {
         <Route
           path="/tesserex"
           element={
-            <ProtectedRoute>
+            // <ProtectedRoute>
+            // </ProtectedRoute>
               <Tesserex />
-            </ProtectedRoute>
           }
         />
         <Route
           path="/register/:id"
           element={
-            <ProtectedRoute>
+            // <ProtectedRoute>
+            // </ProtectedRoute>
               <Register />
-            </ProtectedRoute>
           }
         />
         <Route
           path="/past-events"
           element={
-            <ProtectedRoute>
+            // <ProtectedRoute>
+            // </ProtectedRoute>
               <PastEvents />
-            </ProtectedRoute>
           }
         />
         <Route
           path="/team"
           element={
-            <ProtectedRoute>
+            // <ProtectedRoute>
+            // </ProtectedRoute>
               <Team />
-            </ProtectedRoute>
           }
         />
         <Route
           path="/helpdesk"
           element={
-            <ProtectedRoute>
+            // <ProtectedRoute>
+            // </ProtectedRoute>
               <Helpdesk />
-            </ProtectedRoute>
           }
         />
         <Route path="/login" element={<Login />} />
